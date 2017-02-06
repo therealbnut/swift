@@ -4,23 +4,25 @@
 import StdlibUnittest
 
 let RingBufferTests = TestSuite("RingBuffer")
-RingBuffer.test("basic") {
+
+RingBufferTests.test("basic") {
   expectEqual(RingBuffer<Int>(capacity: 5).capacity, 5)
 
   expectEqualSequence([1,2,3,4,5] as RingBuffer, make([1,2,3,4,5]))
 }
 
-RingBuffer.test("append") {
+RingBufferTests.test("append") {
   expectEqualSequence(make([]) { $0.append(1) },
     make([1]))
 
   expectEqualSequence(make([0,1,2]) { $0.append(contentsOf: [3,4]) },
+    make([0,1,2,3,4]))
 
   expectEqualSequence(make([0,1,2]) { $0.append(contentsOf: [3,4,5]) },
     make([1,2,3,4,5]))
 }
 
-RingBuffer.test("remove") {  
+RingBufferTests.test("remove") {
   expectEqualSequence(make([0,1,2]) { $0.removeSubrange(1..<1) },
     make([0,1,2]))
 
@@ -50,7 +52,7 @@ RingBuffer.test("remove") {
     make([]))
 }
 
-RingBuffer.test("rotate") {
+RingBufferTests.test("rotate") {
   expectEqualSequence(make([0,1,2,3]) { $0.rotate(shiftingToStart: 0) },
     make([0,1,2,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.rotate(shiftingToStart: 0) },
@@ -62,45 +64,45 @@ RingBuffer.test("rotate") {
     make([2,3,4,0,1]))
 }
 
-RingBuffer.test("replaceSubrange") {
+RingBufferTests.test("replaceSubrange") {
   expectEqualSequence(make([]) { $0.replaceSubrange(0..<0, with: [0,1]) },
     make([0,1]))
 
   expectEqualSequence(make([0,1,2,3]) { $0.replaceSubrange(1...2, with: []) },
     make([0,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.replaceSubrange(1...2,
-      with: []) },
+    with: []) },
     make([0,3,4]))
 
   expectEqualSequence(make([0,1,2,3]) { $0.replaceSubrange(1...2,
-      with: [8,9]) },
+    with: [8,9]) },
     make([0,8,9,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.replaceSubrange(1...2,
-      with: [8,9]) },
+    with: [8,9]) },
     make([0,8,9,3,4]))
 
   expectEqualSequence(make([0,1,2,3]) { $0.replaceSubrange(1...2, with: [9]) },
     make([0,9,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.replaceSubrange(1...2,
-      with: [9]) },
+    with: [9]) },
     make([0,9,3,4]))
 
   expectEqualSequence(make([0,1,2,3]) { $0.replaceSubrange(1...2,
-      with: [7,8,9]) },
+    with: [7,8,9]) },
     make([0,7,8,9,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.replaceSubrange(1...2,
-      with: [7,8,9]) },
+    with: [7,8,9]) },
     make([0,8,9,3,4]))
 
   expectEqualSequence(make([0,1,2,3]) { $0.replaceSubrange(1...2,
-      with: [5,6,7,8,9]) },
+    with: [5,6,7,8,9]) },
     make([0,7,8,9,3]))
   expectEqualSequence(make([0,1],[2,3,4]) { $0.replaceSubrange(1...2,
-      with: [5,6,7,8,9]) },
+    with: [5,6,7,8,9]) },
     make([0,8,9,3,4]))
 }
 
-RingBuffer.test("subrange") {
+RingBufferTests.test("subrange") {
   expectEqualSequence(make([0,1,2,3])[1...2], [1,2])
   expectEqualSequence(make([0,1],[2,3,4])[1...3], [1,2,3])
   expectEqualSequence(make([0,1],[2,3,4])[3...3], [3])
@@ -111,15 +113,15 @@ RingBuffer.test("subrange") {
     make([0,4]))
 }
 
-RingBuffer.test("description") {
-  expectEqualSequence(make([0,1,2,3]).description,
+RingBufferTests.test("description") {
+  expectEqual(make([0,1,2,3]).description,
     "[0, 1, 2, 3]")
-  expectEqualSequence(make([0,1],[2,3,4]).description,
+  expectEqual(make([0,1],[2,3,4]).description,
     "[0, 1, 2, 3, 4]")
 
-  expectEqualSequence(make([0,1,2,3]).debugDescription,
-    "RingBuffer<Int,5>([0, 1, 2, 3][])")
-  expectEqualSequence(make([0,1],[2,3,4]).debugDescription,
+  expectEqual(make([0,1,2,3]).debugDescription,
+    "RingBuffer<Int,5>([0, 1, 2, 3])")
+  expectEqual(make([0,1],[2,3,4]).debugDescription,
     "RingBuffer<Int,5>([0, 1][2, 3, 4])")
 }
 
